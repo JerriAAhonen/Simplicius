@@ -7,16 +7,16 @@ namespace simplicius.Core
 {
 	public class Crosshair : Singleton<Crosshair>
 	{
-		[Header("Crosshair")] [SerializeField] private RectTransform crosshairRt;
+		[Header("Crosshair")] 
+		[SerializeField] private RectTransform crosshairRt;
 		[SerializeField] private float animationDur;
-
-		[Header("Hit Marker")] [SerializeField]
-		private RectTransform hitMarkerRt;
-
+		[Header("Hit Marker")] 
+		[SerializeField] private RectTransform hitMarkerRt;
 		[SerializeField] private Animation hitMarkerAnimation;
 		[SerializeField] private Color defaultHitColor;
 		[SerializeField] private Color killHitColor;
 
+		private CanvasGroup crosshairCg;
 		private CanvasGroup hitMarkerCg;
 		private List<Image> hitMarkers;
 
@@ -29,8 +29,10 @@ namespace simplicius.Core
 			base.Awake();
 
 			defaultWidth = currentWidth = crosshairRt.GetWidth();
+			crosshairCg = crosshairRt.GetComponent<CanvasGroup>();
 			hitMarkerCg = hitMarkerRt.GetComponent<CanvasGroup>();
-			MiscUtil.ActivateCanvasGroup(hitMarkerCg, false);
+			crosshairCg.alpha = 1f;
+			hitMarkerCg.alpha = 0f;
 
 			hitMarkers = new List<Image>(hitMarkerRt.GetComponentsInChildren<Image>());
 			SetHitMarkerColor(defaultHitColor);
@@ -47,6 +49,11 @@ namespace simplicius.Core
 		{
 			currentWidth = defaultWidth * mult;
 			AnimateCrosshair(currentWidth);
+		}
+
+		public void ShowCrosshair(bool show)
+		{
+			crosshairCg.alpha = show ? 1f : 0f;
 		}
 
 		public void ShowHitMarker(bool killed)

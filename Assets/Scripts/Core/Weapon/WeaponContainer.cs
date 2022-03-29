@@ -43,7 +43,8 @@ public class WeaponContainer : MonoBehaviour
 			return null;
 		}
 
-		prevWeapon.gameObject.SetActive(false);
+		if (prevWeapon != null)
+			prevWeapon.gameObject.SetActive(false);
 		Weapon.gameObject.SetActive(true);
 		Weapon.Init();
 		

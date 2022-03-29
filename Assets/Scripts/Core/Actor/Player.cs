@@ -8,6 +8,7 @@ namespace simplicius.Core
 	public class Player : Actor
 	{
 		[Header("General")] 
+		[SerializeField] private PlayerControlType controlType;
 		[SerializeField] private Transform local;
 		[SerializeField] private Transform network;
 		[Header("Audio")]
@@ -40,7 +41,7 @@ namespace simplicius.Core
 			CameraRoot = FPCamera.transform.parent;
 
 			Movement = GetComponent<PlayerMovement>();
-			Shooting = GetComponent<PlayerShooting>();
+			Shooting = controlType == PlayerControlType.Local ? local.GetComponent<PlayerShooting>() : network.GetComponent<PlayerShooting>();
 			Anim = GetComponent<PlayerAnimations>();
 			
 			Movement.Init(this);

@@ -16,12 +16,12 @@ namespace simplicius.Core
 		[SerializeField] private TwoBoneIKConstraint leftHand;
 		
 		private Recoil recoil;
-		private Transform shootPoint;
 
 		private int shotsInBurst;
 		private float lastShotTime;
 		private bool canShoot => Time.time - lastShotTime > weapon.MinShootInterval_Sec;
 		private Weapon weapon => WeaponContainer.Weapon;
+		private Transform shootPoint => weapon.ShootPoint;
 
 		public event Action Shot;
 		public event Action<bool> StartedShooting;
@@ -157,6 +157,7 @@ namespace simplicius.Core
 
 		private void OnAim(bool pressed)
 		{
+			Crosshair.Instance.ShowCrosshair(!pressed);
 			WeaponContainer.Aim(pressed);	// Weapon passive movement animation
 			weapon.Aim(pressed);			// Weapon active position animation
 			IsAiming = pressed;
