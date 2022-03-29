@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 832dfcb73c3b4bfaae2c281dc79c6ce7, type: 3}
+  m_Name: Footstep-Sprinting-SFX
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 2b86dc2e9a439403fa2c7d7d327982bd, type: 3}
+  - {fileID: 8300000, guid: b61a084ead54f4e908e28f742cd11e58, type: 3}
+  - {fileID: 8300000, guid: f05da1e746a0f42cd95ab2a6a984b154, type: 3}
+  - {fileID: 8300000, guid: 1eea422dac3d843309d1ec3863e1e68d, type: 3}
+  volume: 0.3
+  volumeVariance: 0
+  pitch: 1.2
+  pitchVariance: 0.01
+  minInterval: 0.35
+  delay: 0
