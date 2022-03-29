@@ -25,6 +25,7 @@ namespace simplicius.Core
 		public event Action<bool> Shoot;
 		public event Action<bool> Aim;
 		public event Action Reload;
+		public event Action SwitchWeapon;
 
 		private void Start()
 		{
@@ -83,6 +84,12 @@ namespace simplicius.Core
 			pia.Player.Reload.performed += OnReloadPerformed;
 			pia.Player.Reload.Enable();
 
+			pia.Player.PrimaryWeapon.performed += OnPrimaryWeaponPerformed;
+			pia.Player.PrimaryWeapon.Enable();
+
+			pia.Player.SecondaryWeapon.performed += OnSecondaryWeaponPerformed;
+			pia.Player.SecondaryWeapon.Enable();
+
 			removeListeners = RemoveListeners;
 			
 			void OnJumpPerformed(InputAction.CallbackContext _) => Jump?.Invoke();
@@ -95,6 +102,8 @@ namespace simplicius.Core
 			void OnAimPerformed(InputAction.CallbackContext _) => Aim?.Invoke(true);
 			void OnAimCancelled(InputAction.CallbackContext _) => Aim?.Invoke(false);
 			void OnReloadPerformed(InputAction.CallbackContext _) => Reload?.Invoke();
+			void OnPrimaryWeaponPerformed(InputAction.CallbackContext _) => SwitchWeapon?.Invoke();
+			void OnSecondaryWeaponPerformed(InputAction.CallbackContext _) => SwitchWeapon?.Invoke();
 
 			void RemoveListeners()
 			{
@@ -108,6 +117,8 @@ namespace simplicius.Core
 				pia.Player.Aim.performed -= OnAimPerformed;
 				pia.Player.Aim.canceled -= OnAimCancelled;
 				pia.Player.Reload.performed -= OnReloadPerformed;
+				pia.Player.PrimaryWeapon.performed -= OnPrimaryWeaponPerformed;
+				pia.Player.SecondaryWeapon.performed -= OnSecondaryWeaponPerformed;
 			}
 		}
 

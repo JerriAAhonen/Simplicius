@@ -119,7 +119,7 @@ MonoBehaviour:
     clipSize: 30
     reloadTime: 1
     fireMode: 2
-    burstAmount: 3
+    burstAmount: 0
     rateOfFire: 850
     hipRecoil: {x: -2, y: 2, z: 0.35}
     ADSRecoil: {x: -1, y: 1, z: 0.2}
@@ -131,6 +131,8 @@ MonoBehaviour:
     ADSMagnitude: 0.1
     ADSRoughness: 5
     ADSFadeOutTime: 0.1
+  rearHandRef: {fileID: 7420423881008231722}
+  frontHandRef: {fileID: 6835710394994697926}
   shootSfx: {fileID: 11400000, guid: f3b2267d976d94766ab2c0833c0e2007, type: 2}
 --- !u!114 &8337937854163603942
 MonoBehaviour:
@@ -154,7 +156,7 @@ Animator:
   m_GameObject: {fileID: 8394211837702808409}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c6c7fc1d974ce48ebbae632386a75fa9, type: 2}
+  m_Controller: {fileID: 22100000, guid: a7f9efc6c43d44caea4d61f67f5d8f63, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

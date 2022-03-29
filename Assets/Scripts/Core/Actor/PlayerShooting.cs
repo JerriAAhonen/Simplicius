@@ -3,6 +3,7 @@ using EZCameraShake;
 using simplicius.Audio;
 using simplicius.Util;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace simplicius.Core
 {
@@ -11,14 +12,16 @@ namespace simplicius.Core
 		[SerializeField] private AudioEvent hitSfx;
 		[SerializeField] private AudioEvent armorBreakSfx;
 		[SerializeField] private AudioEvent killSfx;
+		[SerializeField] private TwoBoneIKConstraint rightHand;
+		[SerializeField] private TwoBoneIKConstraint leftHand;
 		
-		private Weapon currentWeapon;
 		private Recoil recoil;
 		private Transform shootPoint;
 
 		private int shotsInBurst;
 		private float lastShotTime;
-		private bool canShoot => Time.time - lastShotTime > currentWeapon.MinShootInterval_Sec;
+		private bool canShoot => Time.time - lastShotTime > weapon.MinShootInterval_Sec;
+		private Weapon weapon => WeaponContainer.Weapon;
 
 		public event Action Shot;
 		public event Action<bool> StartedShooting;
@@ -30,36 +33,41 @@ namespace simplicius.Core
 
 		public void Init()
 		{
-			currentWeapon = GetComponentInChildren<Weapon>();
-			if (!currentWeapon) return;
-
-			currentWeapon.Init();
-
-			shootPoint = currentWeapon.ShootPoint;
 			WeaponContainer = GetComponentInChildren<WeaponContainer>();
 			recoil = GetComponentInChildren<Recoil>();
+
+			SwitchWeapon(WeaponID.M4);
 			
 			InputManager.Instance.Shoot += OnShoot;
 			InputManager.Instance.Reload += OnReload;
 			InputManager.Instance.Aim += OnAim;
+			InputManager.Instance.SwitchWeapon += OnSwitchWeapon;
 			
 			OnInitialized();
 		}
-		
+
+		private void OnDisable()
+		{
+			InputManager.Instance.Shoot -= OnShoot;
+			InputManager.Instance.Reload -= OnReload;
+			InputManager.Instance.Aim -= OnAim;
+			InputManager.Instance.SwitchWeapon -= OnSwitchWeapon;
+		}
+
 		#region Shoot
 		
 		private void Update()
 		{
 			// ------------------------------
 			// SINGLE
-			if (currentWeapon.FireMode == FireMode.Single) 
+			if (weapon.FireMode == FireMode.Single) 
 				return;
 			
 			// ------------------------------
 			// BURST
-			if (currentWeapon.FireMode == FireMode.Burst && IsShooting && canShoot)
+			if (weapon.FireMode == FireMode.Burst && IsShooting && canShoot)
 			{
-				if (shotsInBurst < currentWeapon.BurstAmount)
+				if (shotsInBurst < weapon.BurstAmount)
 				{
 					shotsInBurst++;
 					Shoot();
@@ -73,7 +81,7 @@ namespace simplicius.Core
 
 			// ------------------------------
 			// AUTO
-			if (currentWeapon.FireMode == FireMode.Auto && IsShooting && canShoot)
+			if (weapon.FireMode == FireMode.Auto && IsShooting && canShoot)
 				Shoot();
 		}
 
@@ -86,7 +94,7 @@ namespace simplicius.Core
 
 			// ------------------------------
 			// SINGLE
-			if (currentWeapon.FireMode == FireMode.Single && pressed && canShoot)
+			if (weapon.FireMode == FireMode.Single && pressed && canShoot)
 			{
 				Shoot();
 				return;
@@ -94,7 +102,7 @@ namespace simplicius.Core
 
 			// ------------------------------
 			// BURST
-			if (currentWeapon.FireMode == FireMode.Burst)
+			if (weapon.FireMode == FireMode.Burst)
 			{
 				IsShooting = pressed;
 				return;
@@ -131,15 +139,15 @@ namespace simplicius.Core
 			Shot?.Invoke();
 			
 			// Recoil
-			recoil.OnShoot(IsAiming ? currentWeapon.Properties.ADSRecoil : currentWeapon.Properties.hipRecoil);
+			recoil.OnShoot(IsAiming ? weapon.Properties.ADSRecoil : weapon.Properties.hipRecoil);
 			
 			// Weapon animation
-			currentWeapon.Shoot();
+			weapon.Shoot();
 			
 			// Camera effects
-			var magnitude = IsAiming ? currentWeapon.Properties.ADSMagnitude : currentWeapon.Properties.hipMagnitude;
-			var roughness = IsAiming ? currentWeapon.Properties.ADSRoughness : currentWeapon.Properties.hipRoughness;
-			var fadeOutTime = IsAiming ? currentWeapon.Properties.ADSFadeOutTime : currentWeapon.Properties.hipFadeOutTime;
+			var magnitude = IsAiming ? weapon.Properties.ADSMagnitude : weapon.Properties.hipMagnitude;
+			var roughness = IsAiming ? weapon.Properties.ADSRoughness : weapon.Properties.hipRoughness;
+			var fadeOutTime = IsAiming ? weapon.Properties.ADSFadeOutTime : weapon.Properties.hipFadeOutTime;
 			CameraShaker.Instance.ShakeOnce(magnitude, roughness, 0, fadeOutTime);
 		}
 		
@@ -150,7 +158,7 @@ namespace simplicius.Core
 		private void OnAim(bool pressed)
 		{
 			WeaponContainer.Aim(pressed);	// Weapon passive movement animation
-			currentWeapon.Aim(pressed);		// Weapon active position animation
+			weapon.Aim(pressed);			// Weapon active position animation
 			IsAiming = pressed;
 		}
 
@@ -160,7 +168,23 @@ namespace simplicius.Core
 
 		private void OnReload()
 		{
-			currentWeapon.Reload();
+			weapon.Reload();
+		}
+
+		#endregion
+
+		#region Switch Weapon
+
+		private void OnSwitchWeapon()
+		{
+			
+		}
+		
+		private void SwitchWeapon(WeaponID id)
+		{
+			WeaponContainer.ChangeWeapon(id);
+			rightHand.data.target = WeaponContainer.Weapon.RearHandRef;
+			leftHand.data.target = WeaponContainer.Weapon.FrontHandRef;
 		}
 
 		#endregion

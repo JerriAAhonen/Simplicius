@@ -1,4 +1,12 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum WeaponID
+{
+	M4 = 0, 
+	Pistol1 = 1
+}
 
 public class WeaponContainer : MonoBehaviour
 {
@@ -8,12 +16,48 @@ public class WeaponContainer : MonoBehaviour
 	private static readonly int aiming = Animator.StringToHash("Aiming");
 	private static readonly int shooting = Animator.StringToHash("Shooting");
 
+	[SerializeField] private List<WeaponMap> weapons;
+
 	private Animator animator;
+	public Weapon Weapon { get; private set; }
+
+	public event Action<Weapon> WeaponChanged;
 
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
+		foreach (var map in weapons)
+			map.prefab.gameObject.SetActive(false);
 	}
+
+	#region Weapon Change
+
+	public Weapon ChangeWeapon(WeaponID id)
+	{
+		var prevWeapon = Weapon;
+		Weapon = weapons.Find(x => x.id == id).prefab;
+		if (Weapon == null)
+		{
+			Debug.LogError($"Weapons list doesn't contain an entry for {id}");
+			Weapon = prevWeapon;	// Return to previous weapon
+			return null;
+		}
+
+		prevWeapon.gameObject.SetActive(false);
+		Weapon.gameObject.SetActive(true);
+		Weapon.Init();
+		
+		// TODO Hide current weapon with animation
+		
+		// TODO Show new weapon with animation
+		
+		WeaponChanged?.Invoke(Weapon);
+		return Weapon;
+	}
+
+	#endregion
+
+	#region Animations
 
 	public void Idle()
 	{
@@ -44,5 +88,14 @@ public class WeaponContainer : MonoBehaviour
 	public void Shoot(bool shoot)
 	{
 		animator.SetBool(shooting, shoot);
+	}
+	
+	#endregion
+	
+	[Serializable]
+	private struct WeaponMap
+	{
+		public WeaponID id;
+		public Weapon prefab;
 	}
 }

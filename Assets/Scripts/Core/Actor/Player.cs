@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace simplicius.Core
 {
+	public enum PlayerControlType { Local, Network }
+	
 	public class Player : Actor
 	{
+		[Header("General")] 
+		[SerializeField] private Transform local;
+		[SerializeField] private Transform network;
 		[Header("Audio")]
 		[SerializeField] private AudioEvent walkingFootstepSfx;
 		[SerializeField] private AudioEvent sprintingFootstepSfx;
@@ -25,6 +30,12 @@ namespace simplicius.Core
 
 		private void Start()
 		{
+			/*
+			 * 
+			 */
+			
+			
+			
 			FPCamera = GetComponentInChildren<FirstPersonCamera>();
 			CameraRoot = FPCamera.transform.parent;
 
