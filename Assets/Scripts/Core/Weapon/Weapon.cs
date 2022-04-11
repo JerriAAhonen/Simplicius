@@ -2,6 +2,12 @@ using simplicius.Audio;
 using simplicius.Core;
 using UnityEngine;
 
+public enum WeaponID
+{
+	M4 = 0, 
+	Pistol1 = 1
+}
+
 public enum FireMode { Single, Burst, Auto }
 
 public class Weapon : MonoBehaviour
@@ -10,8 +16,9 @@ public class Weapon : MonoBehaviour
 	private static readonly int reload = Animator.StringToHash("Reload");
 	private static readonly int show = Animator.StringToHash("Show");
 	private static readonly int hide = Animator.StringToHash("Hide");
-	
-	[Header("General")]
+
+	[Header("General")] 
+	[SerializeField] private WeaponID id;
 	[SerializeField] private Transform shootPoint;
 	[SerializeField] private WeaponProperties properties;
 	[SerializeField] private Transform rearHandRef;
@@ -23,6 +30,10 @@ public class Weapon : MonoBehaviour
 	private MuzzleFlash muzzleFlash;
 	private int? aimTween;
 
+	public int AmmoInClip { get; set; }
+	public int AmmoReserve { get; set; }
+
+	public WeaponID ID => id;
 	public Transform ShootPoint => shootPoint;
 	public Transform RearHandRef => rearHandRef;
 	public Transform FrontHandRef => frontHandRef;

@@ -116,6 +116,13 @@ namespace simplicius.Core
 
 		private void Shoot()
 		{
+			// Update Ammo
+			if (weapon.AmmoInClip <= 0)
+				return;
+
+			weapon.AmmoInClip--;
+			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
+			
 			lastShotTime = Time.time;
 			
 			var ray = new Ray(shootPoint.position, shootPoint.forward);
@@ -126,7 +133,7 @@ namespace simplicius.Core
 				if (actor)
 				{
 					var killed = actor.TakeDamage(10);
-					Crosshair.Instance.ShowHitMarker(killed);
+					IngameHUD.Instance.Crosshair.ShowHitMarker(killed);
 					AudioManager.Instance.PlayOnce(hitSfx);
 					// TODO: Armor break and Kill SFX
 				}
@@ -157,7 +164,7 @@ namespace simplicius.Core
 
 		private void OnAim(bool pressed)
 		{
-			Crosshair.Instance.ShowCrosshair(!pressed);
+			IngameHUD.Instance.Crosshair.ShowCrosshair(!pressed);
 			WeaponContainer.Aim(pressed);	// Weapon passive movement animation
 			weapon.Aim(pressed);			// Weapon active position animation
 			IsAiming = pressed;
@@ -169,6 +176,13 @@ namespace simplicius.Core
 
 		private void OnReload()
 		{
+			if (weapon.AmmoReserve <= 0)
+				return;
+
+			weapon.AmmoReserve -= weapon.Properties.clipSize;
+			weapon.AmmoInClip = weapon.Properties.clipSize;
+			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
+			
 			weapon.Reload();
 		}
 
@@ -178,7 +192,10 @@ namespace simplicius.Core
 
 		private void OnSwitchWeapon()
 		{
-			
+			if (weapon.ID == WeaponID.M4)
+				SwitchWeapon(WeaponID.Pistol1);
+			else
+				SwitchWeapon(WeaponID.M4);
 		}
 		
 		private void SwitchWeapon(WeaponID id)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace simplicius.Core
 {
-	public class Crosshair : Singleton<Crosshair>
+	public class Crosshair : MonoBehaviour
 	{
 		[Header("Crosshair")] 
 		[SerializeField] private RectTransform crosshairRt;
@@ -24,10 +24,8 @@ namespace simplicius.Core
 		private float currentWidth;
 		private int? crosshairTweenId;
 
-		protected override void Awake()
+		private void Awake()
 		{
-			base.Awake();
-
 			defaultWidth = currentWidth = crosshairRt.GetWidth();
 			crosshairCg = crosshairRt.GetComponent<CanvasGroup>();
 			hitMarkerCg = hitMarkerRt.GetComponent<CanvasGroup>();

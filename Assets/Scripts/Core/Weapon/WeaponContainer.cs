@@ -2,21 +2,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WeaponID
-{
-	M4 = 0, 
-	Pistol1 = 1
-}
-
 public class WeaponContainer : MonoBehaviour
 {
+	#region Animator Hashes
 	private static readonly int idle = Animator.StringToHash("Idle");
 	private static readonly int walk = Animator.StringToHash("Walk");
 	private static readonly int sprint = Animator.StringToHash("Sprint");
 	private static readonly int aiming = Animator.StringToHash("Aiming");
 	private static readonly int shooting = Animator.StringToHash("Shooting");
+	#endregion
 
-	[SerializeField] private List<WeaponMap> weapons;
+	[SerializeField] private List<Weapon> weapons;
 
 	private Animator animator;
 	public Weapon Weapon { get; private set; }
@@ -26,8 +22,8 @@ public class WeaponContainer : MonoBehaviour
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
-		foreach (var map in weapons)
-			map.prefab.gameObject.SetActive(false);
+		foreach (var weapon in weapons)
+			weapon.gameObject.SetActive(false);
 	}
 
 	#region Weapon Change
@@ -35,7 +31,7 @@ public class WeaponContainer : MonoBehaviour
 	public Weapon ChangeWeapon(WeaponID id)
 	{
 		var prevWeapon = Weapon;
-		Weapon = weapons.Find(x => x.id == id).prefab;
+		Weapon = weapons.Find(x => x.ID == id);
 		if (Weapon == null)
 		{
 			Debug.LogError($"Weapons list doesn't contain an entry for {id}");
@@ -92,11 +88,4 @@ public class WeaponContainer : MonoBehaviour
 	}
 	
 	#endregion
-	
-	[Serializable]
-	private struct WeaponMap
-	{
-		public WeaponID id;
-		public Weapon prefab;
-	}
 }
