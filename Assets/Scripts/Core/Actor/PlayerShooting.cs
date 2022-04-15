@@ -89,6 +89,8 @@ namespace simplicius.Core
 		{
 			// TODO: Cancel reload if possible
 			
+			Debug.Log("[PlayerShooting] Shoot pressed");
+			
 			// Weapon passive movement animation
 			WeaponContainer.Shoot(pressed);
 
