@@ -37,6 +37,7 @@ namespace simplicius.Core
 			recoil = GetComponentInChildren<Recoil>();
 
 			SwitchWeapon(WeaponID.M4);
+			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
 			
 			InputManager.Instance.Shoot += OnShoot;
 			InputManager.Instance.Reload += OnReload;
@@ -118,6 +119,7 @@ namespace simplicius.Core
 
 		private void Shoot()
 		{
+			Debug.Log($"[PlayerShooting] Shoot(), Ammo in clip: {weapon.AmmoInClip}");
 			// Update Ammo
 			if (weapon.AmmoInClip <= 0)
 				return;

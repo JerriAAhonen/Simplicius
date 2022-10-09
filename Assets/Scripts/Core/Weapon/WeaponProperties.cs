@@ -9,6 +9,7 @@ namespace simplicius.Core
 		[Header("General")]
 		public int damage = 10;
 		public int clipSize = 30;
+		public int maxReserveAmmo = 300;
 		public float reloadTime = 1f;
 		
 		[Header("Fire Mode")]

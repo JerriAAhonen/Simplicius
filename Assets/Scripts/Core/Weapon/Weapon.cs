@@ -46,10 +46,14 @@ public class Weapon : MonoBehaviour
 	{
 		animator = GetComponent<Animator>();
 		muzzleFlash = GetComponentInChildren<MuzzleFlash>();
+
+		AmmoInClip = Properties.clipSize;
+		AmmoReserve = Properties.maxReserveAmmo;
 	}
 
 	public void Shoot()
 	{
+		Debug.Log("[Weapon] Shoot()");
 		animator.SetTrigger(shoot);
 		AudioManager.Instance.PlayOnce(shootSfx);
 		muzzleFlash.ShowVFX();
