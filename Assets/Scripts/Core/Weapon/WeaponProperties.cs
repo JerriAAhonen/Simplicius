@@ -23,7 +23,8 @@ namespace simplicius.Core
 		
 		[Header("Animation Timings")]
 		public float equipDur = 0.5f;
-		public float ADSDur = 0.2f;
+		public float adsOnDur = 0.1f;
+		public float adsOffDur = 0.3f;
 		
 		[Header("Camera Shake")] 
 		public float hipMagnitude = 0.5f;

@@ -41,13 +41,15 @@ namespace EZCameraShake
 		/// </summary>
 		public List<CameraShakeInstance> ShakeInstances => new(cameraShakeInstances);
 
-		private Vector3 posAddShake, rotAddShake;
+		private Vector3 initialLocalPos, posAddShake, rotAddShake;
 		private readonly List<CameraShakeInstance> cameraShakeInstances = new();
 
 		private void Awake()
 		{
 			Instance = this;
 			instanceList.Add(gameObject.name, this);
+
+			initialLocalPos = transform.localPosition;
 		}
 
 		private void Update()
@@ -74,7 +76,7 @@ namespace EZCameraShake
 				}
 			}
 
-			transform.localPosition = posAddShake + RestPositionOffset;
+			transform.localPosition = posAddShake + RestPositionOffset + initialLocalPos;
 			transform.localEulerAngles = rotAddShake + RestRotationOffset;
 		}
 

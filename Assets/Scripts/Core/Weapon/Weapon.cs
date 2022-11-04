@@ -69,8 +69,10 @@ public class Weapon : MonoBehaviour
 		if (aimTween.HasValue)
 			LeanTween.cancel(aimTween.Value);
 
-		aimTween = LeanTween.value(gameObject, animator.GetLayerWeight(1), aim ? 1f : 0f, properties.ADSDur)
-			.setOnUpdate(v => animator.SetLayerWeight(1, v)).uniqueId;
+		aimTween = LeanTween.value(gameObject, animator.GetLayerWeight(1), aim ? 1f : 0f, aim ? properties.adsOnDur : properties.adsOffDur)
+			.setOnUpdate(v => animator.SetLayerWeight(1, v))
+			.setEase(LeanTweenType.easeOutExpo)
+			.uniqueId;
 	}
 
 	/// <summary>
