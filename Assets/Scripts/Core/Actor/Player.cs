@@ -47,5 +47,13 @@ namespace simplicius.Core
 			
 			OnInitialized();
 		}
+
+		public override bool TakeDamage(int amount)
+		{
+			Debug.Log($"{transform.name} took {amount} damage");
+			Health -= amount;
+			Health = Mathf.Clamp(Health, 0, MaxHealth);
+			return Health == 0;
+		}
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace simplicius.Core
 {
-	public class Actor : InitializedMonoBehaviour
+	public abstract class Actor : InitializedMonoBehaviour
 	{
 		[SerializeField] private int maxHealth = 100;
 		[SerializeField] private int maxArmor = 100;
@@ -29,13 +29,7 @@ namespace simplicius.Core
 		{
 		}
 
-		public bool TakeDamage(int amount)
-		{
-			Debug.Log($"{transform.name} took {amount} damage");
-			Health -= amount;
-			Health = Mathf.Clamp(Health, 0, MaxHealth);
-			return Health == 0;
-		}
+		public abstract bool TakeDamage(int amount);
 
 		public void Reset()
 		{

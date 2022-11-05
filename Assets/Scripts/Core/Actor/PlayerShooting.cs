@@ -136,7 +136,7 @@ namespace simplicius.Core
 			if (Physics.Raycast(ray, out var hit))
 			{
 				Debug.DrawRay(shootPoint.position, shootPoint.forward * hit.distance, Color.green);
-				var actor = hit.collider.GetComponent<Actor>();
+				var actor = hit.collider.GetComponentInParent<Actor>();
 				if (actor)
 				{
 					var killed = actor.TakeDamage(10);
