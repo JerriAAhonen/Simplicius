@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum WeaponID
 {
-	M4 = 0, 
+	AssaultRifle1 = 0, 
 	Pistol1 = 1
 }
 
@@ -19,15 +19,20 @@ public class Weapon : MonoBehaviour
 
 	[Header("General")] 
 	[SerializeField] private WeaponID id;
+	[Space]
 	[SerializeField] private Transform shootPoint;
+	[SerializeField] private ParticleSystem muzzleFlash;
+	[Space]
+	[SerializeField] private Transform bulletCasingPos;
+	[SerializeField] private GameObject bulletCasing;
 	[SerializeField] private WeaponProperties properties;
+	[Space]
 	[SerializeField] private Transform rearHandRef;
 	[SerializeField] private Transform frontHandRef;
 	[Header("SFX")]
 	[SerializeField] private AudioEvent shootSfx;
 
 	private Animator animator;
-	private MuzzleFlash muzzleFlash;
 	private int? aimTween;
 
 	public int AmmoInClip { get; set; }
@@ -45,7 +50,6 @@ public class Weapon : MonoBehaviour
 	public void Init()
 	{
 		animator = GetComponent<Animator>();
-		muzzleFlash = GetComponentInChildren<MuzzleFlash>();
 
 		AmmoInClip = Properties.clipSize;
 		AmmoReserve = Properties.maxReserveAmmo;
@@ -56,7 +60,8 @@ public class Weapon : MonoBehaviour
 		Debug.Log("[Weapon] Shoot()");
 		animator.SetTrigger(shoot);
 		AudioManager.Instance.PlayOnce(shootSfx);
-		muzzleFlash.ShowVFX();
+		Instantiate(muzzleFlash, shootPoint).Play(true);
+		Instantiate(bulletCasing, bulletCasingPos);
 	}
 	
 	public void Reload()

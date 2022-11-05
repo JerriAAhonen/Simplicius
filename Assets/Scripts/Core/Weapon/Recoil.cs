@@ -19,18 +19,8 @@ public class Recoil : MonoBehaviour
 		shooting = GetComponentInParent<PlayerShooting>();
 	}
 
-	private Vector3 compensatedTargetRot;
 	private void Update()
 	{
-		// TODO: Take into account recoil compensation from the player
-		/*if (shooting.IsShooting)
-		{
-			compensatedTargetRot = new Vector3(-mouseLook.RotWhileShooting.x, -mouseLook.RotWhileShooting.y, 0);
-			targetRot = Vector3.Lerp(targetRot, Vector3.zero, returnSpeed * Time.deltaTime);
-		}
-		else
-			targetRot = Vector3.Lerp(targetRot, compensatedTargetRot, returnSpeed * Time.deltaTime);*/
-		
 		targetRot = Vector3.Lerp(targetRot, Vector3.zero, returnSpeed * Time.deltaTime);
 		currentRot = Vector3.Slerp(currentRot, targetRot, snappiness * Time.fixedDeltaTime);
 		transform.localRotation = Quaternion.Euler(currentRot);

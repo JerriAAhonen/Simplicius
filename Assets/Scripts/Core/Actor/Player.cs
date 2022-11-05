@@ -31,12 +31,6 @@ namespace simplicius.Core
 
 		private void Start()
 		{
-			/*
-			 * 
-			 */
-			
-			
-			
 			FPCamera = GetComponentInChildren<FirstPersonCamera>();
 			CameraRoot = FPCamera.transform.parent;
 
@@ -45,7 +39,7 @@ namespace simplicius.Core
 			Anim = GetComponent<PlayerAnimations>();
 			
 			Movement.Init(this);
-			Shooting.Init();
+			Shooting.Init(this);
 			Anim.Init(Shooting);
 
 			mouseLook = GetComponentInChildren<MouseLook>();

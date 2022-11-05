@@ -16,6 +16,7 @@ namespace simplicius.Core
 		[SerializeField] private TwoBoneIKConstraint leftHand;
 		
 		private Recoil recoil;
+		private Player player;
 
 		private int shotsInBurst;
 		private float lastShotTime;
@@ -31,12 +32,14 @@ namespace simplicius.Core
 
 		public WeaponContainer WeaponContainer { get; private set; }
 
-		public void Init()
+		public void Init(Player player)
 		{
+			this.player = player;
+			
 			WeaponContainer = GetComponentInChildren<WeaponContainer>();
 			recoil = GetComponentInChildren<Recoil>();
 
-			SwitchWeapon(WeaponID.M4);
+			SwitchWeapon(WeaponID.AssaultRifle1);
 			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
 			
 			InputManager.Instance.Shoot += OnShoot;
@@ -172,6 +175,11 @@ namespace simplicius.Core
 			WeaponContainer.Aim(pressed);	// Weapon passive movement animation
 			weapon.Aim(pressed);			// Weapon active position animation
 			IsAiming = pressed;
+			
+			if (pressed)
+				player.FPCamera.SetFov(53);
+			else
+				player.FPCamera.ResetFov();
 		}
 
 		#endregion
@@ -196,10 +204,10 @@ namespace simplicius.Core
 
 		private void OnSwitchWeapon()
 		{
-			if (weapon.ID == WeaponID.M4)
+			if (weapon.ID == WeaponID.AssaultRifle1)
 				SwitchWeapon(WeaponID.Pistol1);
 			else
-				SwitchWeapon(WeaponID.M4);
+				SwitchWeapon(WeaponID.AssaultRifle1);
 		}
 		
 		private void SwitchWeapon(WeaponID id)
