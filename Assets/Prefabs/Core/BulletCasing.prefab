@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8443026213240519525}
   - component: {fileID: 4191627866618613891}
   - component: {fileID: 4587667673217658663}
+  - component: {fileID: -6256986602264482519}
   - component: {fileID: 7864404014816288370}
   - component: {fileID: 6234235975023815023}
-  - component: {fileID: -6256986602264482519}
   m_Layer: 6
   m_Name: BulletCasing
   m_TagString: Untagged
@@ -86,6 +86,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6256986602264482519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6627583172173928764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c52c87d18844c9b41bd1253359e93942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 3
+  collisionSFX: {fileID: 11400000, guid: 2d902977996d9df449351955c1dd09ee, type: 2}
 --- !u!136 &7864404014816288370
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -116,17 +130,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-6256986602264482519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6627583172173928764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c52c87d18844c9b41bd1253359e93942, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force: 5
-  collisionSFX: {fileID: 11400000, guid: 2d902977996d9df449351955c1dd09ee, type: 2}

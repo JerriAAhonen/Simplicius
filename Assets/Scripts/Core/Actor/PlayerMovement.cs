@@ -12,6 +12,7 @@ namespace simplicius.Core
 		[SerializeField] private bool printDebugLogs;
 		[SerializeField] private float speed = 5;
 		[SerializeField] private float gravity = -30;
+		[SerializeField] private float isGroundedRadius;
 
 		private Player player;
 		private CharacterController cc;
@@ -27,6 +28,7 @@ namespace simplicius.Core
 		
 		public bool PrintDebugLogs => printDebugLogs;
 		public bool IsGrounded { get; private set; }
+		public bool IsFalling { get; private set; }
 		public bool WasGrounded { get; private set; }
 		public float LastTimeGrounded { get; set; }
 		public Vector3 HorizontalVel { get; private set; }
@@ -87,10 +89,10 @@ namespace simplicius.Core
 		{
 			if (!IsReady) return;
 			if (!player.IsAlive) return;
-
-			WasGrounded = IsGrounded;
-			IsGrounded = cc.isGrounded;
+			
+			RefreshIsGrounded();
 			RefreshGroundInfo();
+			RefreshIsFalling();
 
 			//------------------------------
 			// HORIZONTAL movement
@@ -110,6 +112,7 @@ namespace simplicius.Core
 			var finalSpeed = speed * ActiveMovementState.SpeedModifier;
 			cc.Move(HorizontalVel * (finalSpeed * Time.deltaTime));
 			
+			//------------------------------
 			// Audio
 			if (HorizontalVel.sqrMagnitude > 0 && IsGrounded)
 			{
@@ -249,6 +252,18 @@ namespace simplicius.Core
 			}
 		}
 
+		private void RefreshIsGrounded()
+		{
+			WasGrounded = IsGrounded;
+			IsGrounded = Physics.CheckSphere(transform.position, isGroundedRadius, groundMask);
+			Debug.Log($"IsGrounded: {IsGrounded}");
+		}
+
+		private void RefreshIsFalling()
+		{
+			IsFalling = !IsGrounded && VerticalVel.y < 0f;
+		}
+		
 		private void RefreshGroundInfo()
 		{
 			var hits = Physics.SphereCastNonAlloc(
@@ -279,6 +294,11 @@ namespace simplicius.Core
 				groundNormal = Vector3.up;
 				distanceToGround = 0f;
 			}
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			Gizmos.DrawWireSphere(transform.position, isGroundedRadius);
 		}
 	}
 }

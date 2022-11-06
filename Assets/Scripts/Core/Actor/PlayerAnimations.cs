@@ -18,13 +18,16 @@ namespace simplicius.Core
 		private Animator characterAnimator;
 		private float movementBlendTreeSpeed;
 		private int? movementBlendTreeTweenId;
+		
+		private static readonly int ap_Speed = Animator.StringToHash("Speed");
+		private static readonly int ap_MotionSpeed = Animator.StringToHash("MotionSpeed");
+		private static readonly int ap_Grounded = Animator.StringToHash("Grounded");
+		private static readonly int ap_Jump1 = Animator.StringToHash("Jump");
 
 		public void Init(PlayerShooting shooting)
 		{
 			this.shooting = shooting;
-
 			characterAnimator = GetComponentInChildren<Animator>();
-
 			OnInitialized();
 		}
 
@@ -57,27 +60,31 @@ namespace simplicius.Core
 			movementBlendTreeTweenId = LeanTween.value(gameObject, previousSpeed, newSpeed, movementBlendTreeTransitionDur)
 				.setOnUpdate(v =>
 				{
-					characterAnimator.SetFloat("Speed", v);
+					characterAnimator.SetFloat(ap_Speed, v);
 					movementBlendTreeSpeed = v;
 				})
 				.setOnComplete(_ => movementBlendTreeSpeed = newSpeed)
 				.uniqueId;
 			
-			characterAnimator.SetFloat("MotionSpeed", motionSpeed);
+			characterAnimator.SetFloat(ap_MotionSpeed, motionSpeed);
 		}
 
 		#endregion
 
 		public void Jump()
 		{
-			characterAnimator.SetBool("Grounded", false);
-			characterAnimator.SetBool("Jump", true);
+			characterAnimator.SetBool(ap_Grounded, false);
+			characterAnimator.SetBool(ap_Jump1, true);
+			Debug.LogError("Jump");
+			shooting.WeaponContainer.Jump();
 		}
 
 		public void Land()
 		{
-			characterAnimator.SetBool("Jump", false);
-			characterAnimator.SetBool("Grounded", true);
+			characterAnimator.SetBool(ap_Jump1, false);
+			characterAnimator.SetBool(ap_Grounded, true);
+			Debug.LogError("Land");
+			shooting.WeaponContainer.Land();
 		}
 	}
 }

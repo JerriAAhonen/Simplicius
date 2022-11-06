@@ -8,6 +8,8 @@ public class WeaponContainer : MonoBehaviour
 	private static readonly int idle = Animator.StringToHash("Idle");
 	private static readonly int walk = Animator.StringToHash("Walk");
 	private static readonly int sprint = Animator.StringToHash("Sprint");
+	private static readonly int jump = Animator.StringToHash("Jump");
+	private static readonly int land = Animator.StringToHash("Land");
 	private static readonly int aiming = Animator.StringToHash("Aiming");
 	private static readonly int shooting = Animator.StringToHash("Shooting");
 	#endregion
@@ -21,7 +23,7 @@ public class WeaponContainer : MonoBehaviour
 
 	private void Awake()
 	{
-		animator = GetComponent<Animator>();
+		animator = GetComponentInChildren<Animator>();
 		foreach (var weapon in weapons)
 			weapon.gameObject.SetActive(false);
 	}
@@ -75,6 +77,16 @@ public class WeaponContainer : MonoBehaviour
 		animator.SetBool(idle, false);
 		animator.SetBool(walk, false);
 		animator.SetBool(sprint, true);
+	}
+
+	public void Jump()
+	{
+		animator.SetTrigger(jump);
+	}
+
+	public void Land()
+	{
+		animator.SetTrigger(land);
 	}
 
 	public void Aim(bool aim)

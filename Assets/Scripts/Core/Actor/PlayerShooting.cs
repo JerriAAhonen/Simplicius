@@ -96,7 +96,7 @@ namespace simplicius.Core
 			Debug.Log("[PlayerShooting] Shoot pressed");
 			
 			// Weapon passive movement animation
-			WeaponContainer.Shoot(pressed);
+			//WeaponContainer.Shoot(pressed);
 
 			// ------------------------------
 			// SINGLE
@@ -172,12 +172,12 @@ namespace simplicius.Core
 		private void OnAim(bool pressed)
 		{
 			IngameHUD.Instance.Crosshair.ShowCrosshair(!pressed);
-			WeaponContainer.Aim(pressed);	// Weapon passive movement animation
+			//WeaponContainer.Aim(pressed);	// Weapon passive movement animation
 			weapon.Aim(pressed);			// Weapon active position animation
 			IsAiming = pressed;
 			
 			if (pressed)
-				player.FPCamera.SetFov(53);
+				player.FPCamera.SetFov(50);
 			else
 				player.FPCamera.ResetFov();
 		}

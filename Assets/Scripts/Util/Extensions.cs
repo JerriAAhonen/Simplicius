@@ -32,6 +32,13 @@ namespace simplicius.Util
 			       && Mathf.Approximately(self.y, other.y)
 			       && Mathf.Approximately(self.z, other.z);
 		}
+
+		public static void Clamp(this Vector3 self, float xClamp, float yClamp, float zClamp)
+		{
+			self.x = Mathf.Clamp(self.x, -xClamp, xClamp);
+			self.y = Mathf.Clamp(self.x, -yClamp, yClamp);
+			self.z = Mathf.Clamp(self.x, -zClamp, zClamp);
+		}
 	}
 
 	public static class ListExtensions
