@@ -256,7 +256,6 @@ namespace simplicius.Core
 		{
 			WasGrounded = IsGrounded;
 			IsGrounded = Physics.CheckSphere(transform.position, isGroundedRadius, groundMask);
-			Debug.Log($"IsGrounded: {IsGrounded}");
 		}
 
 		private void RefreshIsFalling()

@@ -22,6 +22,7 @@ public class Weapon : MonoBehaviour
 	[Space]
 	[SerializeField] private Transform shootPoint;
 	[SerializeField] private ParticleSystem muzzleFlash;
+	[SerializeField] private Transform reticleRef;
 	[Space]
 	[SerializeField] private Transform bulletCasingPos;
 	[SerializeField] private GameObject bulletCasing;
@@ -40,6 +41,7 @@ public class Weapon : MonoBehaviour
 
 	public WeaponID ID => id;
 	public Transform ShootPoint => shootPoint;
+	public Transform ReticleTm => reticleRef;
 	public Transform RearHandRef => rearHandRef;
 	public Transform FrontHandRef => frontHandRef;
 	public WeaponProperties Properties => properties;
@@ -71,13 +73,7 @@ public class Weapon : MonoBehaviour
 
 	public void Aim(bool aim)
 	{
-		if (aimTween.HasValue)
-			LeanTween.cancel(aimTween.Value);
-
-		aimTween = LeanTween.value(gameObject, animator.GetLayerWeight(1), aim ? 1f : 0f, aim ? properties.adsOnDur : properties.adsOffDur)
-			.setOnUpdate(v => animator.SetLayerWeight(1, v))
-			.setEase(LeanTweenType.easeOutExpo)
-			.uniqueId;
+		
 	}
 
 	/// <summary>

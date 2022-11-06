@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using simplicius.Core;
+using simplicius.Util;
 using UnityEngine;
 
-public class WeaponContainer : MonoBehaviour
+public class WeaponContainer : InitializedMonoBehaviour
 {
 	#region Animator Hashes
 	private static readonly int idle = Animator.StringToHash("Idle");
@@ -13,12 +15,53 @@ public class WeaponContainer : MonoBehaviour
 	private static readonly int aiming = Animator.StringToHash("Aiming");
 	private static readonly int shooting = Animator.StringToHash("Shooting");
 	#endregion
-
+	
+	[Header("Weapon refs")]
 	[SerializeField] private List<Weapon> weapons;
+	[Header("Look sway")]
+	[SerializeField] private float lookSwayAmount = 6f;
+	[SerializeField] private float lookSwaySmoothing = 0.1f;
+	[SerializeField] private float lookSwayResetSmoothing = 0.05f;
+	[SerializeField] private float clampX = 4;
+	[SerializeField] private float clampY = 4;
+	[Header("Movement sway")] 
+	[SerializeField] private Vector2 movementSwayAmount = new(10f, 2f);
+	[SerializeField] private float movementSwaySmoothing = 0.1f;
+	[SerializeField] private float movementSwayResetSmoothing = 0.05f;
+	[Header("Sights")] 
+	[SerializeField] private float sightOffset;
+	[SerializeField] private float adsSmoothing;
+	[SerializeField] private Transform adsObject;
 
+	private bool isInitialized;
+	private Transform cameraTm;
 	private Animator animator;
-	public Weapon Weapon { get; private set; }
+	private bool isAiming;
+	
+	#region Sway 
+	
+	// Look
+	private Vector3 targetLookRotation;
+	private Vector3 targetLookRotationVelocity;
+		
+	private Vector3 newLookRotation;
+	private Vector3 newLookRotationVelocity;
 
+	// Movement
+	private Vector3 targetMovementRotation;
+	private Vector3 targetMovementRotationVelocity;
+
+	private Vector3 newMovementRotation;
+	private Vector3 newMovementRotationVelocity;
+	
+	#endregion
+
+	private Vector3 targetADSPosition;
+	private Vector3 targetADSPositionVelocity;
+	private Vector3 newADSPosition;
+	private Vector3 newADSPositionVelocity;
+	
+	public Weapon Weapon { get; private set; }
 	public event Action<Weapon> WeaponChanged;
 
 	private void Awake()
@@ -28,6 +71,62 @@ public class WeaponContainer : MonoBehaviour
 			weapon.gameObject.SetActive(false);
 	}
 
+	private void Update()
+	{
+		if (!IsReady) return;
+		
+		CalculateRotation();
+		CalculateADS();
+	}
+
+	public void Init(Player player)
+	{
+		cameraTm = player.CameraRoot;
+		OnInitialized();
+	}
+	
+	private void CalculateRotation()
+	{
+		// Look
+		targetLookRotation.y += lookSwayAmount * InputManager.Instance.LookInput.x * Time.deltaTime;
+		targetLookRotation.x += -lookSwayAmount * InputManager.Instance.LookInput.y * Time.deltaTime;
+		targetLookRotation.Clamp(clampX, clampY, 0);
+		targetLookRotation.z = -targetLookRotation.y;
+			
+		targetLookRotation = Vector3.SmoothDamp(targetLookRotation, Vector3.zero, ref targetLookRotationVelocity, movementSwayResetSmoothing);
+		newLookRotation = Vector3.SmoothDamp(newLookRotation, targetLookRotation, ref newLookRotationVelocity, lookSwaySmoothing);
+
+		// Movement
+		targetMovementRotation.z = -movementSwayAmount.x * InputManager.Instance.MovementInput.x;
+		targetMovementRotation.x = movementSwayAmount.y * InputManager.Instance.MovementInput.y;
+			
+		targetMovementRotation = Vector3.SmoothDamp(targetMovementRotation, Vector3.zero, ref targetMovementRotationVelocity, lookSwayResetSmoothing);
+		newMovementRotation = Vector3.SmoothDamp(newMovementRotation, targetMovementRotation, ref newMovementRotationVelocity, movementSwaySmoothing);
+			
+		// Set
+		transform.localRotation = Quaternion.Euler(newLookRotation + newMovementRotation);
+	}
+
+	private Vector3 adsObjectPosition;
+	private Vector3 adsPositionVelocity;
+	
+	private void CalculateADS()
+	{
+		var targetPosition = transform.position;
+		if (isAiming)
+			targetPosition = cameraTm.position + (adsObject.position - Weapon.ReticleTm.position);
+
+		adsObjectPosition = adsObject.position;
+		adsObjectPosition = Vector3.SmoothDamp(adsObjectPosition, targetPosition, ref adsPositionVelocity, adsSmoothing);
+		adsObject.position = adsObjectPosition;
+
+		/*
+		targetADSPosition = isAiming ? cameraTm.position + (transform.position - Weapon.ReticleTm.position) : transform.position;
+		
+		newADSPosition = Vector3.SmoothDamp(newADSPosition, targetADSPosition, ref newADSPositionVelocity, adsSmoothing);
+		transform.position = newADSPosition;*/
+	}
+	
 	#region Weapon Change
 
 	public Weapon ChangeWeapon(WeaponID id)
@@ -91,6 +190,7 @@ public class WeaponContainer : MonoBehaviour
 
 	public void Aim(bool aim)
 	{
+		isAiming = aim;
 		animator.SetBool(aiming, aim);
 	}
 

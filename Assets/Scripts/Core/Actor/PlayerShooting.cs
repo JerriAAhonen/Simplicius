@@ -37,6 +37,7 @@ namespace simplicius.Core
 			this.player = player;
 			
 			WeaponContainer = GetComponentInChildren<WeaponContainer>();
+			WeaponContainer.Init(player);
 			recoil = GetComponentInChildren<Recoil>();
 
 			SwitchWeapon(WeaponID.AssaultRifle1);
@@ -172,8 +173,7 @@ namespace simplicius.Core
 		private void OnAim(bool pressed)
 		{
 			IngameHUD.Instance.Crosshair.ShowCrosshair(!pressed);
-			//WeaponContainer.Aim(pressed);	// Weapon passive movement animation
-			weapon.Aim(pressed);			// Weapon active position animation
+			WeaponContainer.Aim(pressed);
 			IsAiming = pressed;
 			
 			if (pressed)
