@@ -15,7 +15,7 @@ namespace simplicius.Core
 		[SerializeField] private TwoBoneIKConstraint rightHand;
 		[SerializeField] private TwoBoneIKConstraint leftHand;
 		
-		private Recoil recoil;
+		private CameraRecoil cameraRecoil;
 		private Player player;
 
 		private int shotsInBurst;
@@ -38,7 +38,7 @@ namespace simplicius.Core
 			
 			WeaponContainer = GetComponentInChildren<WeaponContainer>();
 			WeaponContainer.Init(player);
-			recoil = GetComponentInChildren<Recoil>();
+			cameraRecoil = GetComponentInChildren<CameraRecoil>();
 
 			SwitchWeapon(WeaponID.AssaultRifle1);
 			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
@@ -63,6 +63,8 @@ namespace simplicius.Core
 		
 		private void Update()
 		{
+			WeaponContainer.IsShooting(IsShooting);
+			
 			// ------------------------------
 			// SINGLE
 			if (weapon.FireMode == FireMode.Single) 
@@ -154,8 +156,9 @@ namespace simplicius.Core
 			Shot?.Invoke();
 			
 			// Recoil
-			recoil.OnShoot(IsAiming ? weapon.Properties.ADSRecoil : weapon.Properties.hipRecoil);
-			
+			cameraRecoil.OnShoot(IsAiming ? weapon.Properties.ADSRecoil : weapon.Properties.hipRecoil);
+			WeaponContainer.OnShoot();
+
 			// Weapon animation
 			weapon.Shoot();
 			

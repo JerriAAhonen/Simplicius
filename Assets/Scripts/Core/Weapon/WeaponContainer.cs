@@ -32,6 +32,8 @@ public class WeaponContainer : InitializedMonoBehaviour
 	[SerializeField] private float sightOffset;
 	[SerializeField] private float adsSmoothing;
 	[SerializeField] private Transform adsObject;
+	[Header("Weapon Recoil")] 
+	[SerializeField] private float recoilAmount;
 
 	private bool isInitialized;
 	private Transform cameraTm;
@@ -56,10 +58,23 @@ public class WeaponContainer : InitializedMonoBehaviour
 	
 	#endregion
 
+	#region ADS
+
 	private Vector3 targetADSPosition;
 	private Vector3 targetADSPositionVelocity;
 	private Vector3 newADSPosition;
 	private Vector3 newADSPositionVelocity;
+
+	#endregion
+
+	#region Recoil
+
+	private Vector3 targetRecoilPosition;
+	private Vector3 targetRecoilPositionVelocity;
+	private Vector3 newRecoilPosition;
+	private Vector3 newRecoilPositionVelocity;
+
+	#endregion
 	
 	public Weapon Weapon { get; private set; }
 	public event Action<Weapon> WeaponChanged;
@@ -76,7 +91,7 @@ public class WeaponContainer : InitializedMonoBehaviour
 		if (!IsReady) return;
 		
 		CalculateRotation();
-		CalculateADS();
+		CalculatePosition();
 	}
 
 	public void Init(Player player)
@@ -110,23 +125,24 @@ public class WeaponContainer : InitializedMonoBehaviour
 	private Vector3 adsObjectPosition;
 	private Vector3 adsPositionVelocity;
 	
-	private void CalculateADS()
+	private bool shot;
+	private void CalculatePosition()
 	{
 		var targetPosition = transform.position;
 		if (isAiming)
 			targetPosition = cameraTm.position + (adsObject.position - Weapon.ReticleTm.position);
+		
+		if (shot)
+		{
+			shot = false;
+			targetPosition += -transform.forward * recoilAmount;
+		}
 
 		adsObjectPosition = adsObject.position;
 		adsObjectPosition = Vector3.SmoothDamp(adsObjectPosition, targetPosition, ref adsPositionVelocity, adsSmoothing);
 		adsObject.position = adsObjectPosition;
-
-		/*
-		targetADSPosition = isAiming ? cameraTm.position + (transform.position - Weapon.ReticleTm.position) : transform.position;
-		
-		newADSPosition = Vector3.SmoothDamp(newADSPosition, targetADSPosition, ref newADSPositionVelocity, adsSmoothing);
-		transform.position = newADSPosition;*/
 	}
-	
+
 	#region Weapon Change
 
 	public Weapon ChangeWeapon(WeaponID id)
@@ -194,9 +210,14 @@ public class WeaponContainer : InitializedMonoBehaviour
 		animator.SetBool(aiming, aim);
 	}
 
-	public void Shoot(bool shoot)
+	public void IsShooting(bool shoot)
 	{
 		animator.SetBool(shooting, shoot);
+	}
+
+	public void OnShoot()
+	{
+		shot = true;
 	}
 	
 	#endregion

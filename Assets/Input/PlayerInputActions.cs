@@ -125,6 +125,24 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lean_Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""8bccda38-f4f1-4578-ba9f-bb745a1d933e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lean_Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""19713973-cb33-4a8e-8837-afa3fe3a2ebf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -303,6 +321,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5575667e-6197-4ee6-b2db-f601e117693b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lean_Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eeaa4b1a-b87c-4100-ba33-f93c8922bea9"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lean_Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -322,6 +362,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_PrimaryWeapon = m_Player.FindAction("PrimaryWeapon", throwIfNotFound: true);
         m_Player_SecondaryWeapon = m_Player.FindAction("SecondaryWeapon", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_Lean_Right = m_Player.FindAction("Lean_Right", throwIfNotFound: true);
+        m_Player_Lean_Left = m_Player.FindAction("Lean_Left", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -392,6 +434,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PrimaryWeapon;
     private readonly InputAction m_Player_SecondaryWeapon;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_Lean_Right;
+    private readonly InputAction m_Player_Lean_Left;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -407,6 +451,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @PrimaryWeapon => m_Wrapper.m_Player_PrimaryWeapon;
         public InputAction @SecondaryWeapon => m_Wrapper.m_Player_SecondaryWeapon;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @Lean_Right => m_Wrapper.m_Player_Lean_Right;
+        public InputAction @Lean_Left => m_Wrapper.m_Player_Lean_Left;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -449,6 +495,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Lean_Right.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Right;
+                @Lean_Right.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Right;
+                @Lean_Right.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Right;
+                @Lean_Left.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Left;
+                @Lean_Left.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Left;
+                @Lean_Left.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLean_Left;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -486,6 +538,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @Lean_Right.started += instance.OnLean_Right;
+                @Lean_Right.performed += instance.OnLean_Right;
+                @Lean_Right.canceled += instance.OnLean_Right;
+                @Lean_Left.started += instance.OnLean_Left;
+                @Lean_Left.performed += instance.OnLean_Left;
+                @Lean_Left.canceled += instance.OnLean_Left;
             }
         }
     }
@@ -503,5 +561,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnPrimaryWeapon(InputAction.CallbackContext context);
         void OnSecondaryWeapon(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnLean_Right(InputAction.CallbackContext context);
+        void OnLean_Left(InputAction.CallbackContext context);
     }
 }

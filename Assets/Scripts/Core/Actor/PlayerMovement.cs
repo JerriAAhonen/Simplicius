@@ -17,6 +17,7 @@ namespace simplicius.Core
 		private Player player;
 		private CharacterController cc;
 		private InputManager inputManager;
+		private LeanSystem leanSystem;
 
 		private Transform tm;
 		private LayerMask groundMask;
@@ -51,6 +52,7 @@ namespace simplicius.Core
 
 		private void Awake()
 		{
+			leanSystem = GetComponentInChildren<LeanSystem>();
 			cc = GetComponent<CharacterController>();
 			tm = transform;
 		}
@@ -81,8 +83,22 @@ namespace simplicius.Core
 			inputManager.Jump += OnJump;
 			inputManager.Crouch += OnCrouch;
 			inputManager.Sprint += OnSprint;
+			inputManager.LeanRight += OnLeanRight;
+			inputManager.LeanLeft += OnLeanLeft;
 			
 			OnInitialized();
+		}
+
+		private void OnLeanRight(bool lean)
+		{
+			Debug.LogError($"Right, lean: {lean}");
+			leanSystem.OnLean(lean, true);
+		}
+
+		private void OnLeanLeft(bool lean)
+		{
+			Debug.LogError($"Left, lean: {lean}");
+			leanSystem.OnLean(lean, false);
 		}
 
 		private void Update()

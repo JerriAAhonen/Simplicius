@@ -59,8 +59,7 @@ public class Weapon : MonoBehaviour
 
 	public void Shoot()
 	{
-		Debug.Log("[Weapon] Shoot()");
-		animator.SetTrigger(shoot);
+		//animator.SetTrigger(shoot);
 		AudioManager.Instance.PlayOnce(shootSfx);
 		Instantiate(muzzleFlash, shootPoint).Play(true);
 		Instantiate(bulletCasing, bulletCasingPos);
@@ -69,11 +68,6 @@ public class Weapon : MonoBehaviour
 	public void Reload()
 	{
 		animator.SetTrigger(reload);
-	}
-
-	public void Aim(bool aim)
-	{
-		
 	}
 
 	/// <summary>

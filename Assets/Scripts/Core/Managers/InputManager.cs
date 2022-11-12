@@ -15,7 +15,7 @@ namespace simplicius.Core
 		private InputAction lookAction;
 		private Action removeListeners;
 		
-		public bool IsReady;
+		public bool IsReady { get; private set; }
 		public Vector2 MovementInput { get; private set; }
 		public Vector2 LookInput { get; private set; }
 
@@ -24,6 +24,8 @@ namespace simplicius.Core
 		public event Action<bool, bool> Sprint;
 		public event Action<bool> Shoot;
 		public event Action<bool> Aim;
+		public event Action<bool> LeanRight;
+		public event Action<bool> LeanLeft;
 		public event Action Reload;
 		public event Action SwitchWeapon;
 
@@ -81,6 +83,13 @@ namespace simplicius.Core
 			pia.Player.Aim.canceled += OnAimCancelled;
 			pia.Player.Aim.Enable();
 
+			pia.Player.Lean_Right.performed += OnLeanRightPerformed;
+			pia.Player.Lean_Right.canceled += OnLeanRightCancelled;
+			pia.Player.Lean_Left.performed += OnLeanLeftPerformed;
+			pia.Player.Lean_Left.canceled += OnLeanLeftCancelled;
+			pia.Player.Lean_Right.Enable();
+			pia.Player.Lean_Left.Enable();
+
 			pia.Player.Reload.performed += OnReloadPerformed;
 			pia.Player.Reload.Enable();
 
@@ -100,6 +109,10 @@ namespace simplicius.Core
 			void OnShootPerformed(InputAction.CallbackContext _) => Shoot?.Invoke(true);
 			void OnShootCancelled(InputAction.CallbackContext _) => Shoot?.Invoke(false);
 			void OnAimPerformed(InputAction.CallbackContext _) => Aim?.Invoke(true);
+			void OnLeanRightPerformed(InputAction.CallbackContext _) => LeanRight?.Invoke(true);
+			void OnLeanRightCancelled(InputAction.CallbackContext _) => LeanRight?.Invoke(false);
+			void OnLeanLeftPerformed(InputAction.CallbackContext _) => LeanLeft?.Invoke(true);
+			void OnLeanLeftCancelled(InputAction.CallbackContext _) => LeanLeft?.Invoke(false);
 			void OnAimCancelled(InputAction.CallbackContext _) => Aim?.Invoke(false);
 			void OnReloadPerformed(InputAction.CallbackContext _) => Reload?.Invoke();
 			void OnPrimaryWeaponPerformed(InputAction.CallbackContext _) => SwitchWeapon?.Invoke();
@@ -116,6 +129,10 @@ namespace simplicius.Core
 				pia.Player.Shoot.canceled -= OnShootCancelled;
 				pia.Player.Aim.performed -= OnAimPerformed;
 				pia.Player.Aim.canceled -= OnAimCancelled;
+				pia.Player.Lean_Right.performed -= OnLeanRightPerformed;
+				pia.Player.Lean_Right.canceled -= OnLeanRightCancelled;
+				pia.Player.Lean_Left.performed -= OnLeanLeftPerformed;
+				pia.Player.Lean_Left.canceled -= OnLeanLeftCancelled;
 				pia.Player.Reload.performed -= OnReloadPerformed;
 				pia.Player.PrimaryWeapon.performed -= OnPrimaryWeaponPerformed;
 				pia.Player.SecondaryWeapon.performed -= OnSecondaryWeaponPerformed;
@@ -129,12 +146,14 @@ namespace simplicius.Core
 			movementAction.Disable();
 			lookAction.Disable();
 			
-			pia.Player.Jump.Enable();
-			pia.Player.Crouch.Enable();
-			pia.Player.Sprint.Enable();
-			pia.Player.Shoot.Enable();
-			pia.Player.Aim.Enable();
-			pia.Player.Reload.Enable();
+			pia.Player.Jump.Disable();
+			pia.Player.Crouch.Disable();
+			pia.Player.Sprint.Disable();
+			pia.Player.Shoot.Disable();
+			pia.Player.Aim.Disable();
+			pia.Player.Lean_Right.Disable();
+			pia.Player.Lean_Left.Disable();
+			pia.Player.Reload.Disable();
 		}
 	}
 }
