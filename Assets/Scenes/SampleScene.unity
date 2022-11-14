@@ -1986,18 +1986,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons: []
-  lookSwayAmount: 6
-  lookSwaySmoothing: 0.1
-  lookSwayResetSmoothing: 0.05
-  clampX: 4
-  clampY: 4
-  movementSwayAmount: {x: 10, y: 2}
-  movementSwaySmoothing: 0.1
-  movementSwayResetSmoothing: 0.05
-  sightOffset: 0
   adsSmoothing: 0
   adsObject: {fileID: 0}
-  recoilAmount: 0
 --- !u!1 &1033556691
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,11 +2810,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 1068606616}
     m_Modifications:
-    - target: {fileID: 7596002031326397604, guid: c6d4150d9bd1e6f4eb30cceb6790e81e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8394211837702808409, guid: c6d4150d9bd1e6f4eb30cceb6790e81e,
         type: 3}
       propertyPath: m_Name
@@ -2954,18 +2939,8 @@ MonoBehaviour:
   weapons:
   - {fileID: 1642747174}
   - {fileID: 4059088557951862154}
-  lookSwayAmount: 6
-  lookSwaySmoothing: 0.1
-  lookSwayResetSmoothing: 0.05
-  clampX: 4
-  clampY: 4
-  movementSwayAmount: {x: 10, y: 2}
-  movementSwaySmoothing: 0.1
-  movementSwayResetSmoothing: 0.05
-  sightOffset: 1
   adsSmoothing: 0.1
   adsObject: {fileID: 2123119258}
-  recoilAmount: 0.1
 --- !u!1 &1799397998
 GameObject:
   m_ObjectHideFlags: 0

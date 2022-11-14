@@ -27,6 +27,7 @@ public class Weapon : MonoBehaviour
 	[SerializeField] private Transform bulletCasingPos;
 	[SerializeField] private GameObject bulletCasing;
 	[SerializeField] private WeaponProperties properties;
+	[SerializeField] private WeaponAttachments attachments;
 	[Space]
 	[SerializeField] private Transform rearHandRef;
 	[SerializeField] private Transform frontHandRef;
@@ -40,11 +41,12 @@ public class Weapon : MonoBehaviour
 	public int AmmoReserve { get; set; }
 
 	public WeaponID ID => id;
-	public Transform ShootPoint => shootPoint;
-	public Transform ReticleTm => reticleRef;
+	public Transform ShootPoint => attachments.GetCurrentMuzzle().shootPoint;
+	public Transform ReticleTm => attachments.GetCurrentSight().adsRefPos;
 	public Transform RearHandRef => rearHandRef;
 	public Transform FrontHandRef => frontHandRef;
 	public WeaponProperties Properties => properties;
+	public WeaponAttachments Attachments => attachments;
 	public FireMode FireMode => properties.fireMode;
 	public int BurstAmount => properties.burstAmount;
 	public float MinShootInterval_Sec => 60f / properties.rateOfFire;

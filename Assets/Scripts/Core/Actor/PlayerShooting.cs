@@ -37,10 +37,11 @@ namespace simplicius.Core
 			this.player = player;
 			
 			WeaponContainer = GetComponentInChildren<WeaponContainer>();
+			SwitchWeapon(WeaponID.AssaultRifle1);
 			WeaponContainer.Init(player);
 			cameraRecoil = GetComponentInChildren<CameraRecoil>();
 
-			SwitchWeapon(WeaponID.AssaultRifle1);
+			
 			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
 			
 			InputManager.Instance.Shoot += OnShoot;
@@ -95,9 +96,7 @@ namespace simplicius.Core
 		private void OnShoot(bool pressed)
 		{
 			// TODO: Cancel reload if possible
-			
-			Debug.Log("[PlayerShooting] Shoot pressed");
-			
+
 			// Weapon passive movement animation
 			//WeaponContainer.Shoot(pressed);
 
@@ -125,7 +124,7 @@ namespace simplicius.Core
 
 		private void Shoot()
 		{
-			Debug.Log($"[PlayerShooting] Shoot(), Ammo in clip: {weapon.AmmoInClip}");
+			//Debug.Log($"[PlayerShooting] Shoot(), Ammo in clip: {weapon.AmmoInClip}");
 			// Update Ammo
 			if (weapon.AmmoInClip <= 0)
 				return;
@@ -180,7 +179,7 @@ namespace simplicius.Core
 			IsAiming = pressed;
 			
 			if (pressed)
-				player.FPCamera.SetFov(50);
+				player.FPCamera.SetFov(WeaponContainer.Weapon.Attachments.ADSFov);
 			else
 				player.FPCamera.ResetFov();
 		}

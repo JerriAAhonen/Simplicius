@@ -21,14 +21,18 @@ namespace simplicius.Core
 		public class WeaponAttachment_SightsMap
 		{
 			public WeaponAttachment_Sights type;
-			public GameObject go;
+			public GameObject sight;
+			public Transform adsRefPos;
+			public float adsFOV;
 		}
 		
 		[Serializable]
 		public class WeaponAttachment_MuzzlesMap
 		{
 			public WeaponAttachment_Muzzles type;
-			public GameObject go;
+			public GameObject muzzle;
+			public Transform shootPoint;
+			public float recoilMod;
 		}
 
 		[SerializeField] private List<WeaponAttachment_SightsMap> sights;
@@ -36,18 +40,55 @@ namespace simplicius.Core
 
 		private WeaponAttachment_Sights currentSight;
 		private WeaponAttachment_Muzzles currentMuzzle;
-		
-		public float RecoilModifier { get; private set; }
-		public float ADSZoomModifier { get; private set; }
+
+		public float RecoilModifier { get; private set; } = 1f;
+		public float ADSFov { get; private set; } = 1f;
 
 		public void ChangeSight(WeaponAttachment_Sights type)
 		{
-			
+			if (currentSight == type)
+				return;
+
+			var currentMap = sights.Find(x => x.type == currentSight);
+			var newMap = sights.Find(x => x.type == type);
+
+			currentMap.sight.SetActive(false);
+			newMap.sight.SetActive(true);
+
+			currentSight = type;
+			ADSFov = newMap.adsFOV;
 		}
 		
 		public void ChangeMuzzle(WeaponAttachment_Muzzles type)
 		{
+			if (currentMuzzle == type)
+				return;
+
+			var currentMap = muzzles.Find(x => x.type == currentMuzzle);
+			var newMap = muzzles.Find(x => x.type == type);
 			
+			currentMap.muzzle.SetActive(false);
+			newMap.muzzle.SetActive(true);
+
+			currentMuzzle = type;
+			RecoilModifier = newMap.recoilMod;
+		}
+
+		public WeaponAttachment_SightsMap GetCurrentSight() => sights.Find(x => x.type == currentSight);
+		public WeaponAttachment_MuzzlesMap GetCurrentMuzzle() => muzzles.Find(x => x.type == currentMuzzle);
+
+		public WeaponAttachment_Sights GetNextSight()
+		{
+			return currentSight == WeaponAttachment_Sights.RedDot
+				? WeaponAttachment_Sights.scope_x4
+				: WeaponAttachment_Sights.RedDot;
+		}
+		
+		public WeaponAttachment_Muzzles GetNextMuzzle()
+		{
+			return currentMuzzle == WeaponAttachment_Muzzles.Compensator
+				? WeaponAttachment_Muzzles.Suppressor
+				: WeaponAttachment_Muzzles.Compensator;
 		}
 	}
 }

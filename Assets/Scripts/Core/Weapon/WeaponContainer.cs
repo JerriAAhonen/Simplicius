@@ -18,22 +18,10 @@ public class WeaponContainer : InitializedMonoBehaviour
 	
 	[Header("Weapon refs")]
 	[SerializeField] private List<Weapon> weapons;
-	[Header("Look sway")]
-	[SerializeField] private float lookSwayAmount = 6f;
-	[SerializeField] private float lookSwaySmoothing = 0.1f;
-	[SerializeField] private float lookSwayResetSmoothing = 0.05f;
-	[SerializeField] private float clampX = 4;
-	[SerializeField] private float clampY = 4;
-	[Header("Movement sway")] 
-	[SerializeField] private Vector2 movementSwayAmount = new(10f, 2f);
-	[SerializeField] private float movementSwaySmoothing = 0.1f;
-	[SerializeField] private float movementSwayResetSmoothing = 0.05f;
+	
 	[Header("Sights")] 
-	[SerializeField] private float sightOffset;
 	[SerializeField] private float adsSmoothing;
 	[SerializeField] private Transform adsObject;
-	[Header("Weapon Recoil")] 
-	[SerializeField] private float recoilAmount;
 
 	private bool isInitialized;
 	private Transform cameraTm;
@@ -90,6 +78,14 @@ public class WeaponContainer : InitializedMonoBehaviour
 	{
 		if (!IsReady) return;
 		
+		//-------------------------------------------
+		// DEVELOPMENT
+		if (Input.GetKeyDown(KeyCode.H))
+			Weapon.Attachments.ChangeMuzzle(Weapon.Attachments.GetNextMuzzle());
+		if (Input.GetKeyDown(KeyCode.J))
+			Weapon.Attachments.ChangeSight(Weapon.Attachments.GetNextSight());
+		//-------------------------------------------
+		
 		CalculateRotation();
 		CalculatePosition();
 	}
@@ -97,26 +93,28 @@ public class WeaponContainer : InitializedMonoBehaviour
 	public void Init(Player player)
 	{
 		cameraTm = player.CameraRoot;
+		Weapon.Attachments.ChangeSight(WeaponAttachment_Sights.RedDot);
+		Weapon.Attachments.ChangeMuzzle(WeaponAttachment_Muzzles.Compensator);
 		OnInitialized();
 	}
 	
 	private void CalculateRotation()
 	{
 		// Look
-		targetLookRotation.y += lookSwayAmount * InputManager.Instance.LookInput.x * Time.deltaTime;
-		targetLookRotation.x += -lookSwayAmount * InputManager.Instance.LookInput.y * Time.deltaTime;
-		targetLookRotation.Clamp(clampX, clampY, 0);
+		targetLookRotation.y += (isAiming ? Weapon.Properties.lookSwayADSAmount : Weapon.Properties.lookSwayHipAmount) * InputManager.Instance.LookInput.x * Time.deltaTime;
+		targetLookRotation.x += -(isAiming ? Weapon.Properties.lookSwayADSAmount : Weapon.Properties.lookSwayHipAmount) * InputManager.Instance.LookInput.y * Time.deltaTime;
+		targetLookRotation.Clamp(Weapon.Properties.clampX, Weapon.Properties.clampY, 0);
 		targetLookRotation.z = -targetLookRotation.y;
 			
-		targetLookRotation = Vector3.SmoothDamp(targetLookRotation, Vector3.zero, ref targetLookRotationVelocity, movementSwayResetSmoothing);
-		newLookRotation = Vector3.SmoothDamp(newLookRotation, targetLookRotation, ref newLookRotationVelocity, lookSwaySmoothing);
+		targetLookRotation = Vector3.SmoothDamp(targetLookRotation, Vector3.zero, ref targetLookRotationVelocity, Weapon.Properties.movementSwayResetSmoothing);
+		newLookRotation = Vector3.SmoothDamp(newLookRotation, targetLookRotation, ref newLookRotationVelocity, isAiming ? Weapon.Properties.lookSwayADSSmoothing : Weapon.Properties.lookSwayHipSmoothing);
 
 		// Movement
-		targetMovementRotation.z = -movementSwayAmount.x * InputManager.Instance.MovementInput.x;
-		targetMovementRotation.x = movementSwayAmount.y * InputManager.Instance.MovementInput.y;
+		targetMovementRotation.z = -(isAiming ? Weapon.Properties.movementSwayADSAmount.x : Weapon.Properties.movementSwayHipAmount.x) * InputManager.Instance.MovementInput.x;
+		targetMovementRotation.x = (isAiming ? Weapon.Properties.movementSwayADSAmount.y : Weapon.Properties.movementSwayHipAmount.y) * InputManager.Instance.MovementInput.y;
 			
-		targetMovementRotation = Vector3.SmoothDamp(targetMovementRotation, Vector3.zero, ref targetMovementRotationVelocity, lookSwayResetSmoothing);
-		newMovementRotation = Vector3.SmoothDamp(newMovementRotation, targetMovementRotation, ref newMovementRotationVelocity, movementSwaySmoothing);
+		targetMovementRotation = Vector3.SmoothDamp(targetMovementRotation, Vector3.zero, ref targetMovementRotationVelocity, isAiming ? Weapon.Properties.lookSwayADSResetSmoothing : Weapon.Properties.lookSwayHipResetSmoothing);
+		newMovementRotation = Vector3.SmoothDamp(newMovementRotation, targetMovementRotation, ref newMovementRotationVelocity, Weapon.Properties.movementSwaySmoothing);
 			
 		// Set
 		transform.localRotation = Quaternion.Euler(newLookRotation + newMovementRotation);
@@ -135,7 +133,7 @@ public class WeaponContainer : InitializedMonoBehaviour
 		if (shot)
 		{
 			shot = false;
-			targetPosition += -transform.forward * recoilAmount;
+			targetPosition += -transform.forward * (isAiming ? Weapon.Properties.adsWeaponRecoil : Weapon.Properties.hipWeaponRecoil) * Weapon.Attachments.RecoilModifier;
 		}
 
 		adsObjectPosition = adsObject.position;
