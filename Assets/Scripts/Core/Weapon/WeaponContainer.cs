@@ -93,8 +93,6 @@ public class WeaponContainer : InitializedMonoBehaviour
 	public void Init(Player player)
 	{
 		cameraTm = player.CameraRoot;
-		Weapon.Attachments.ChangeSight(WeaponAttachment_Sights.RedDot);
-		Weapon.Attachments.ChangeMuzzle(WeaponAttachment_Muzzles.Compensator);
 		OnInitialized();
 	}
 	
@@ -158,11 +156,12 @@ public class WeaponContainer : InitializedMonoBehaviour
 			prevWeapon.gameObject.SetActive(false);
 		Weapon.gameObject.SetActive(true);
 		Weapon.Init();
-		
+		Weapon.Attachments.Init();
+
 		// TODO Hide current weapon with animation
-		
+
 		// TODO Show new weapon with animation
-		
+
 		WeaponChanged?.Invoke(Weapon);
 		return Weapon;
 	}

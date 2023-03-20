@@ -44,11 +44,25 @@ namespace simplicius.Core
 		public float RecoilModifier { get; private set; } = 1f;
 		public float ADSFov { get; private set; } = 1f;
 
+		public void Init()
+		{
+			foreach (var item in sights)
+			{
+				item.sight.SetActive(false);
+			}
+
+			ChangeSight(WeaponAttachment_Sights.RedDot);
+
+			foreach (var item in muzzles)
+			{
+				item.muzzle.SetActive(false);
+			}
+
+			ChangeMuzzle(WeaponAttachment_Muzzles.Compensator);
+		}
+
 		public void ChangeSight(WeaponAttachment_Sights type)
 		{
-			if (currentSight == type)
-				return;
-
 			var currentMap = sights.Find(x => x.type == currentSight);
 			var newMap = sights.Find(x => x.type == type);
 
@@ -61,9 +75,6 @@ namespace simplicius.Core
 		
 		public void ChangeMuzzle(WeaponAttachment_Muzzles type)
 		{
-			if (currentMuzzle == type)
-				return;
-
 			var currentMap = muzzles.Find(x => x.type == currentMuzzle);
 			var newMap = muzzles.Find(x => x.type == type);
 			

@@ -14,6 +14,7 @@ namespace simplicius.Core
 		[SerializeField] private AudioEvent killSfx;
 		[SerializeField] private TwoBoneIKConstraint rightHand;
 		[SerializeField] private TwoBoneIKConstraint leftHand;
+		[SerializeField] private RigBuilder rigBuilder;
 		
 		private CameraRecoil cameraRecoil;
 		private Player player;
@@ -40,7 +41,6 @@ namespace simplicius.Core
 			SwitchWeapon(WeaponID.AssaultRifle1);
 			WeaponContainer.Init(player);
 			cameraRecoil = GetComponentInChildren<CameraRecoil>();
-
 			
 			IngameHUD.Instance.AmmoDisplay.SetAmmo(weapon.AmmoInClip, weapon.AmmoReserve);
 			
@@ -217,6 +217,8 @@ namespace simplicius.Core
 			WeaponContainer.ChangeWeapon(id);
 			rightHand.data.target = WeaponContainer.Weapon.RearHandRef;
 			leftHand.data.target = WeaponContainer.Weapon.FrontHandRef;
+
+			rigBuilder.Build();
 		}
 
 		#endregion

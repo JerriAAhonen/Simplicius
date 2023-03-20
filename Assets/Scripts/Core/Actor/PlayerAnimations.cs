@@ -75,7 +75,6 @@ namespace simplicius.Core
 		{
 			characterAnimator.SetBool(ap_Grounded, false);
 			characterAnimator.SetBool(ap_Jump1, true);
-			Debug.LogError("Jump");
 			shooting.WeaponContainer.Jump();
 		}
 
@@ -83,7 +82,6 @@ namespace simplicius.Core
 		{
 			characterAnimator.SetBool(ap_Jump1, false);
 			characterAnimator.SetBool(ap_Grounded, true);
-			Debug.LogError("Land");
 			shooting.WeaponContainer.Land();
 		}
 	}

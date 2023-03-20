@@ -91,13 +91,13 @@ namespace simplicius.Core
 
 		private void OnLeanRight(bool lean)
 		{
-			Debug.LogError($"Right, lean: {lean}");
+			Debug.Log($"Right, lean: {lean}");
 			leanSystem.OnLean(lean, true);
 		}
 
 		private void OnLeanLeft(bool lean)
 		{
-			Debug.LogError($"Left, lean: {lean}");
+			Debug.Log($"Left, lean: {lean}");
 			leanSystem.OnLean(lean, false);
 		}
 
