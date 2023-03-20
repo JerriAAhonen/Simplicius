@@ -60,7 +60,8 @@ namespace StarterAssets
         /// See Assets/Editor/PackageChecker/PackageChecker.cs for more information
         /// </summary>
         [MenuItem(MenuRoot + "/Reinstall Dependencies", false)]
-        static void ResetPackageChecker()
+		[System.Obsolete]
+		static void ResetPackageChecker()
         {
             ScriptingDefineUtils.RemoveScriptingDefine(PackageChecker.PackageCheckerScriptingDefine);
         }

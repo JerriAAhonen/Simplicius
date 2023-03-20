@@ -4,14 +4,16 @@ namespace StarterAssets
 {
     public static class ScriptingDefineUtils
     {
-        public static bool CheckScriptingDefine(string scriptingDefine)
+		[System.Obsolete]
+		public static bool CheckScriptingDefine(string scriptingDefine)
         {
             BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
             var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
             return defines.Contains(scriptingDefine);
         }
 
-        public static void SetScriptingDefine(string scriptingDefine)
+		[System.Obsolete]
+		public static void SetScriptingDefine(string scriptingDefine)
         {
             BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
             var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
@@ -22,7 +24,8 @@ namespace StarterAssets
             }
         }
 
-        public static void RemoveScriptingDefine(string scriptingDefine)
+		[System.Obsolete]
+		public static void RemoveScriptingDefine(string scriptingDefine)
         {
             BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
             var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
